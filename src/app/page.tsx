@@ -4,6 +4,7 @@ import { INSTAGRAM_HANDLE, INSTAGRAM_URL } from "@/lib/social";
 
 const credentials = [
   "한국어교원자격증 보유",
+  "Language Education Certificate (New Zealand)",
   "3년+ 외국인 한국어 지도 경험",
   "10개국 이상 학습자 지도",
   "TOPIK 대비 수업 진행",
