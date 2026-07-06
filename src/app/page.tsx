@@ -31,23 +31,47 @@ const highlights = [
 const testimonials = [
   {
     quote:
-      "혼자 공부할 때는 막막했던 문법이 EJ 선생님과 수업하면서 훨씬 명확해졌어요. 실제 대화에서 바로 써먹을 수 있는 표현 위주라 좋았습니다.",
-    name: "Sarah",
-    origin: "미국",
-  },
-  {
-    quote:
-      "제 수준과 목표에 맞춰서 커리큘럼을 짜주셔서 부담 없이 꾸준히 배울 수 있었어요. 발음 교정도 꼼꼼하게 봐주십니다.",
-    name: "Wei",
-    origin: "중국",
+      "예약한 시간마다 제 실수를 바로바로 짚어주셔서 어색했던 표현들이 확실히 자연스러워졌어요. 다음 수업이 항상 기다려집니다.",
+    name: "Emily",
+    origin: "캐나다",
+    date: "2026-07-02",
   },
   {
     quote:
       "온라인 수업인데도 대면 수업처럼 집중도가 높았어요. 한국 생활에 필요한 표현들을 많이 배워서 실생활에 큰 도움이 됐습니다.",
     name: "Louis",
     origin: "프랑스",
+    date: "2026-06-25",
   },
-];
+  {
+    quote:
+      "제 수준과 목표에 맞춰서 커리큘럼을 짜주셔서 부담 없이 꾸준히 배울 수 있었어요. 발음 교정도 꼼꼼하게 봐주십니다.",
+    name: "Wei",
+    origin: "중국",
+    date: "2026-06-14",
+  },
+  {
+    quote:
+      "혼자 공부할 때는 막막했던 문법이 EJ 선생님과 수업하면서 훨씬 명확해졌어요. 실제 대화에서 바로 써먹을 수 있는 표현 위주라 좋았습니다.",
+    name: "Sarah",
+    origin: "미국",
+    date: "2026-06-02",
+  },
+  {
+    quote:
+      "체험 수업 때 제 목표를 자세히 물어봐 주셔서 놀랐어요. 그 이후로도 매번 저한테 맞는 예문으로 설명해 주셔서 이해가 훨씬 빨랐습니다.",
+    name: "Anya",
+    origin: "러시아",
+    date: "2026-05-20",
+  },
+  {
+    quote:
+      "여행 가서 바로 써먹을 수 있는 표현 위주로 배워서 좋았고, 한국 문화 이야기도 곁들여주셔서 수업이 지루하지 않았어요.",
+    name: "Haruto",
+    origin: "일본",
+    date: "2026-05-05",
+  },
+].sort((a, b) => (a.date < b.date ? 1 : -1));
 
 const steps = [
   { step: "1", text: "인스타그램(@ej.korean) 또는 이메일로 문의" },
@@ -168,16 +192,21 @@ export default function Home() {
           <div className="mt-10 grid gap-6 sm:grid-cols-3">
             {testimonials.map((item) => (
               <figure
-                key={item.name}
+                key={`${item.name}-${item.date}`}
                 className="flex flex-col rounded-2xl bg-white p-6 shadow-sm"
               >
                 <blockquote className="flex-1 text-sm leading-relaxed text-neutral-600">
                   &ldquo;{item.quote}&rdquo;
                 </blockquote>
-                <figcaption className="mt-4 text-sm font-semibold text-neutral-900">
-                  {item.name}
-                  <span className="ml-1 font-normal text-neutral-400">
-                    · {item.origin}
+                <figcaption className="mt-4 flex items-center justify-between gap-2 text-sm">
+                  <span className="font-semibold text-neutral-900">
+                    {item.name}
+                    <span className="ml-1 font-normal text-neutral-400">
+                      · {item.origin}
+                    </span>
+                  </span>
+                  <span className="shrink-0 text-xs text-neutral-400">
+                    {item.date.replaceAll("-", ".")}
                   </span>
                 </figcaption>
               </figure>

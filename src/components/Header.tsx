@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import InstagramIcon from "@/components/icons/InstagramIcon";
 import { INSTAGRAM_URL } from "@/lib/social";
 
@@ -8,6 +11,8 @@ const navLinks = [
 ];
 
 export default function Header() {
+  const pathname = usePathname();
+
   return (
     <header className="sticky top-0 z-50 border-b border-neutral-200 bg-white/90 backdrop-blur">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
@@ -15,15 +20,23 @@ export default function Header() {
           EJ Korean
         </Link>
         <nav className="flex items-center gap-6 text-sm font-medium text-neutral-700">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="transition-colors hover:text-rose-600"
-            >
-              {link.label}
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+            const isActive = pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                aria-current={isActive ? "page" : undefined}
+                className={`transition-colors hover:text-rose-600 ${
+                  isActive
+                    ? "font-semibold text-rose-600 underline underline-offset-4"
+                    : ""
+                }`}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
           <a
             href={INSTAGRAM_URL}
             target="_blank"
