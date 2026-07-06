@@ -1,3 +1,4 @@
+import Link from "next/link";
 import InstagramIcon from "@/components/icons/InstagramIcon";
 import { INSTAGRAM_HANDLE, INSTAGRAM_URL } from "@/lib/social";
 
@@ -14,7 +15,15 @@ export default function Footer() {
           <InstagramIcon className="h-4 w-4" />
           {INSTAGRAM_HANDLE}
         </a>
-        <p>&copy; {new Date().getFullYear()} EJ Korean. All rights reserved.</p>
+        <p>
+          &copy; {new Date().getFullYear()} EJ Korean. All rights reserved.
+          <Link
+            href="/admin"
+            aria-hidden="true"
+            tabIndex={-1}
+            className="ml-2 inline-block h-3 w-3 align-middle opacity-0"
+          />
+        </p>
       </div>
     </footer>
   );
