@@ -1,6 +1,9 @@
 (function () {
   "use strict";
 
+  var CURRENT_SCRIPT_SRC = document.currentScript ? document.currentScript.src : "";
+  var ASSET_BASE = CURRENT_SCRIPT_SRC.replace(/[^/]*$/, "");
+
   var DEMO_DATA = {
     FR: {
       default: {
@@ -161,7 +164,8 @@
     ".musai-card.musai-layout-bottomsheet { max-width: none; border-radius: 20px 20px 0 0; }",
     ".musai-header { display: flex; align-items: center; gap: 10px; }",
     ".musai-avatar { width: 40px; height: 40px; border-radius: 50%; background: #f0fdf4;",
-    "  display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }",
+    "  display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; }",
+    ".musai-avatar img { width: 100%; height: 100%; object-fit: cover; }",
     ".musai-title { margin: 0; font-size: 15px; font-weight: 700; }",
     ".musai-subtitle { margin: 2px 0 0; font-size: 12px; color: #6b7280; }",
     ".musai-score-section { display: flex; align-items: center; gap: 14px; margin-top: 16px; }",
@@ -251,7 +255,9 @@
       layout +
       '">' +
       '<div class="musai-header">' +
-      '<div class="musai-avatar">🛡️</div>' +
+      '<div class="musai-avatar"><img src="' +
+      ASSET_BASE +
+      'musai-avatar.png" alt="무사이 캐릭터" /></div>' +
       "<div>" +
       '<p class="musai-title">무사이 안전정보</p>' +
       '<p class="musai-subtitle">여행지의 안전을 함께 지켜요</p>' +
