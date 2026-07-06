@@ -1,4 +1,6 @@
 import Link from "next/link";
+import InstagramIcon from "@/components/icons/InstagramIcon";
+import { INSTAGRAM_URL } from "@/lib/social";
 
 const navLinks = [
   { href: "/", label: "강사 소개" },
@@ -22,6 +24,15 @@ export default function Header() {
               {link.label}
             </Link>
           ))}
+          <a
+            href={INSTAGRAM_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram @ej.korean"
+            className="text-neutral-500 transition-colors hover:text-rose-600"
+          >
+            <InstagramIcon className="h-5 w-5" />
+          </a>
         </nav>
       </div>
     </header>
