@@ -3,7 +3,7 @@ import Script from "next/script";
 import InstagramIcon from "@/components/icons/InstagramIcon";
 import { INSTAGRAM_HANDLE, INSTAGRAM_URL } from "@/lib/social";
 
-const MUSAI_WIDGET_SRC = "https://aidenbkhan.github.io/musai/musai-widget.js";
+const MUSAI_WIDGET_SRC = "https://aidenbkhan.github.io/Musai/musai-widget.js";
 
 const credentials = [
   "한국어교원자격증 보유",

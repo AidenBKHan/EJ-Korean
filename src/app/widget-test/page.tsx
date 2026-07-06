@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-const MUSAI_WIDGET_SRC = "https://aidenbkhan.github.io/musai/musai-widget.js";
+const MUSAI_WIDGET_SRC = "https://aidenbkhan.github.io/Musai/musai-widget.js";
 
 export default function WidgetTestPage() {
   return (
