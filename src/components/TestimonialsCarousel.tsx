@@ -55,12 +55,12 @@ export default function TestimonialsCarousel({
         )}
         <div
           ref={scrollRef}
-          className="no-scrollbar flex snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth px-1 pb-2"
+          className="no-scrollbar flex snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth px-[calc(50%-9rem)] pb-2 sm:px-[calc(50%-10rem)]"
         >
           {testimonials.map((item) => (
             <figure
               key={`${item.name}-${item.date}`}
-              className="flex w-72 shrink-0 snap-start flex-col rounded-2xl bg-white p-6 shadow-sm sm:w-80"
+              className="flex w-72 shrink-0 snap-center flex-col rounded-2xl bg-white p-6 shadow-sm sm:w-80"
             >
               <blockquote className="flex-1 text-sm leading-relaxed text-neutral-600">
                 &ldquo;{item.quote}&rdquo;
