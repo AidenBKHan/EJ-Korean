@@ -24,7 +24,7 @@ export default function PaymentForm({
   return (
     <div className="mt-12">
       {/* Package selection */}
-      <div className="grid gap-6 sm:grid-cols-3">
+      <div className="grid gap-6 sm:grid-cols-2">
         {visiblePackages.map((pkg) => {
           const isSelected = pkg.id === selectedId;
           return (
