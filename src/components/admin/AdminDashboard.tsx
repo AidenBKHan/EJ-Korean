@@ -24,7 +24,7 @@ export default function AdminDashboard() {
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-16">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-bold text-neutral-900">관리자 대시보드</h1>
         <button
           type="button"
@@ -32,7 +32,7 @@ export default function AdminDashboard() {
             logout();
             router.push("/admin");
           }}
-          className="text-sm font-medium text-neutral-500 hover:text-rose-600"
+          className="shrink-0 text-sm font-medium text-neutral-500 hover:text-rose-600"
         >
           로그아웃
         </button>

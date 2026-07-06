@@ -22,8 +22,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko" className={`${notoSansKr.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col bg-white text-neutral-900">
+    <html
+      lang="ko"
+      className={`${notoSansKr.variable} h-full overflow-x-hidden antialiased`}
+    >
+      <body className="flex min-h-full flex-col overflow-x-hidden bg-white text-neutral-900">
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
