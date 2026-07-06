@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Script from "next/script";
 import InstagramIcon from "@/components/icons/InstagramIcon";
+import TestimonialsCarousel from "@/components/TestimonialsCarousel";
 import { INSTAGRAM_HANDLE, INSTAGRAM_URL } from "@/lib/social";
 
 const MUSAI_WIDGET_SRC = "https://aidenbkhan.github.io/Musai/musai-widget.js";
@@ -192,32 +193,8 @@ export default function Home() {
           <h2 className="text-center text-2xl font-bold text-neutral-900 sm:text-3xl">
             학생 후기
           </h2>
-          <div className="relative mt-10">
-            <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r from-neutral-50 to-transparent sm:w-16" />
-            <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-neutral-50 to-transparent sm:w-16" />
-            <div className="no-scrollbar flex snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth px-1 pb-2">
-              {testimonials.map((item) => (
-                <figure
-                  key={`${item.name}-${item.date}`}
-                  className="flex w-72 shrink-0 snap-start flex-col rounded-2xl bg-white p-6 shadow-sm sm:w-80"
-                >
-                  <blockquote className="flex-1 text-sm leading-relaxed text-neutral-600">
-                    &ldquo;{item.quote}&rdquo;
-                  </blockquote>
-                  <figcaption className="mt-4 flex items-center justify-between gap-2 text-sm">
-                    <span className="font-semibold text-neutral-900">
-                      {item.name}
-                      <span className="ml-1 font-normal text-neutral-400">
-                        · {item.origin}
-                      </span>
-                    </span>
-                    <span className="shrink-0 text-xs text-neutral-400">
-                      {item.date.replaceAll("-", ".")}
-                    </span>
-                  </figcaption>
-                </figure>
-              ))}
-            </div>
+          <div className="mt-10">
+            <TestimonialsCarousel testimonials={testimonials} />
           </div>
         </div>
       </section>
