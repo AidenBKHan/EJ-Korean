@@ -16,6 +16,7 @@ function emptyPackage(): ClassPackage {
     duration: "50분",
     price: 0,
     description: "",
+    visible: true,
   };
 }
 
@@ -83,7 +84,29 @@ export default function PackageEditor() {
             key={pkg.id}
             className="rounded-2xl border border-neutral-200 p-5"
           >
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="flex items-center justify-between gap-3">
+              <span
+                className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${
+                  pkg.visible !== false
+                    ? "bg-rose-50 text-rose-600"
+                    : "bg-neutral-100 text-neutral-500"
+                }`}
+              >
+                {pkg.visible !== false ? "결제 페이지에 표시됨" : "비공개 (링크로만 전송 가능)"}
+              </span>
+              <label className="flex items-center gap-2 text-xs font-medium text-neutral-600">
+                <input
+                  type="checkbox"
+                  checked={pkg.visible !== false}
+                  onChange={(event) =>
+                    updatePackage(pkg.id, { visible: event.target.checked })
+                  }
+                  className="h-4 w-4 rounded border-neutral-300 text-rose-600 focus:ring-rose-500"
+                />
+                결제 페이지에 표시
+              </label>
+            </div>
+            <div className="mt-4 grid gap-4 sm:grid-cols-2">
               <div>
                 <label className="block text-xs font-medium text-neutral-500">
                   패키지명

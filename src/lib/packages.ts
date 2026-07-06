@@ -8,6 +8,8 @@ export type ClassPackage = {
   price: number;
   description: string;
   badge?: string;
+  /** Whether this package is shown on the public payment page. Defaults to true when unset. */
+  visible?: boolean;
 };
 
 export const DEFAULT_PACKAGES: ClassPackage[] = [
@@ -18,6 +20,7 @@ export const DEFAULT_PACKAGES: ClassPackage[] = [
     duration: "50분",
     price: 30000,
     description: "처음 만나는 체험 수업으로 부담 없이 시작해보세요.",
+    visible: true,
   },
   {
     id: "single",
@@ -26,6 +29,7 @@ export const DEFAULT_PACKAGES: ClassPackage[] = [
     duration: "50분",
     price: 40000,
     description: "필요할 때마다 편하게 듣는 단건 수업입니다.",
+    visible: true,
   },
   {
     id: "package-5",
@@ -35,6 +39,7 @@ export const DEFAULT_PACKAGES: ClassPackage[] = [
     price: 190000,
     description: "꾸준히 배우는 학습자를 위한 5회 패키지 (5% 할인 적용가)",
     badge: "5% 할인",
+    visible: true,
   },
   {
     id: "package-10",
@@ -44,6 +49,7 @@ export const DEFAULT_PACKAGES: ClassPackage[] = [
     price: 360000,
     description: "본격적으로 실력을 쌓는 10회 패키지 (10% 할인 적용가)",
     badge: "10% 할인",
+    visible: true,
   },
 ];
 

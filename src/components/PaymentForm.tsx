@@ -12,8 +12,10 @@ export default function PaymentForm({
   preselectedId?: string;
   prefillName?: string;
 }) {
+  const visiblePackages = packages.filter((pkg) => pkg.visible !== false);
+
   const [selectedId, setSelectedId] = useState(
-    preselectedId ?? packages[0]?.id ?? "",
+    preselectedId ?? visiblePackages[0]?.id ?? packages[0]?.id ?? "",
   );
   const [submitted, setSubmitted] = useState(false);
 
@@ -23,7 +25,7 @@ export default function PaymentForm({
     <div className="mt-12">
       {/* Package selection */}
       <div className="grid gap-6 sm:grid-cols-3">
-        {packages.map((pkg) => {
+        {visiblePackages.map((pkg) => {
           const isSelected = pkg.id === selectedId;
           return (
             <button
@@ -45,6 +47,11 @@ export default function PaymentForm({
               <p className="mt-1 text-sm text-neutral-500">{pkg.duration}</p>
               <p className="mt-4 text-2xl font-black text-neutral-900">
                 {pkg.price.toLocaleString("ko-KR")}원
+                {pkg.sessions > 1 && (
+                  <span className="ml-1.5 text-sm font-medium text-neutral-400">
+                    (회당 {Math.round(pkg.price / pkg.sessions).toLocaleString("ko-KR")}원)
+                  </span>
+                )}
               </p>
               <p className="mt-3 text-sm leading-relaxed text-neutral-600">
                 {pkg.description}

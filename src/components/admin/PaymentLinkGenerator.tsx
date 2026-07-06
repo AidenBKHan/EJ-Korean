@@ -79,6 +79,7 @@ export default function PaymentLinkGenerator({
           >
             {packages.map((pkg) => (
               <option key={pkg.id} value={pkg.id}>
+                {pkg.visible === false ? "[비공개] " : ""}
                 {pkg.name} · {pkg.price.toLocaleString("ko-KR")}원
               </option>
             ))}
