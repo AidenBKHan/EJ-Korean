@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { login, ADMIN_PASSWORD_HINT } from "@/lib/admin-auth";
+import { login, ADMIN_ID, ADMIN_PASSWORD_HINT } from "@/lib/admin-auth";
 
 export default function AdminLoginForm() {
   const router = useRouter();
-  const [id, setId] = useState("");
+  const [id, setId] = useState(ADMIN_ID);
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
 
