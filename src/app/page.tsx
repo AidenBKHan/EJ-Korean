@@ -1,6 +1,9 @@
 import Link from "next/link";
+import Script from "next/script";
 import InstagramIcon from "@/components/icons/InstagramIcon";
 import { INSTAGRAM_HANDLE, INSTAGRAM_URL } from "@/lib/social";
+
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 const credentials = [
   "한국어교원자격증 보유",
@@ -278,7 +281,30 @@ export default function Home() {
             수업 결제하러 가기
           </Link>
         </div>
+
+        {/* 기술 테스트: MUSAI 안전 위젯 삽입 예시 (EJ Korean 서비스와 무관) */}
+        <div className="mt-12 border-t border-dashed border-neutral-200 pt-10">
+          <p className="text-xs font-medium uppercase tracking-wide text-neutral-400">
+            기술 테스트 삽입 (MUSAI 위젯)
+          </p>
+          <div className="mt-4 flex flex-wrap justify-center gap-6">
+            <div
+              className="musai-safety-widget"
+              data-country="FR"
+              data-region="파리"
+              data-layout="card"
+            />
+            <div
+              className="musai-safety-widget"
+              data-country="ES"
+              data-region="바르셀로나"
+              data-layout="card"
+            />
+          </div>
+        </div>
       </section>
+
+      <Script src={`${BASE_PATH}/musai-widget.js`} strategy="afterInteractive" />
     </div>
   );
 }

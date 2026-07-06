@@ -31,7 +31,10 @@ export default function WidgetTestPage() {
         </p>
       </div>
 
-      <div className="mt-12 flex flex-wrap justify-center gap-6">
+      <h2 className="mt-16 text-center text-lg font-bold text-neutral-900">
+        국가 단위 예시
+      </h2>
+      <div className="mt-6 flex flex-wrap justify-center gap-6">
         <div
           className="musai-safety-widget"
           data-country="FR"
@@ -42,6 +45,30 @@ export default function WidgetTestPage() {
           className="musai-safety-widget"
           data-country="ES"
           data-region="바르셀로나"
+          data-layout="card"
+        />
+      </div>
+
+      <h2 className="mt-16 text-center text-lg font-bold text-neutral-900">
+        같은 국가, 세분화된 지역 예시 (프랑스)
+      </h2>
+      <div className="mt-6 flex flex-wrap justify-center gap-6">
+        <div
+          className="musai-safety-widget"
+          data-country="FR"
+          data-region="파리"
+          data-layout="card"
+        />
+        <div
+          className="musai-safety-widget"
+          data-country="FR"
+          data-region="몽마르트르"
+          data-layout="card"
+        />
+        <div
+          className="musai-safety-widget"
+          data-country="FR"
+          data-region="니스"
           data-layout="card"
         />
       </div>

@@ -3,32 +3,93 @@
 
   var DEMO_DATA = {
     FR: {
-      region: "파리",
-      safetyIndex: 72.0,
-      badge: "유의 필요",
-      summary:
-        "주요 관광지와 대중교통 이용 시 소매치기, 여권·휴대폰 분실에 유의하세요.",
+      default: {
+        region: "프랑스",
+        safetyIndex: 75.0,
+        badge: "양호",
+        summary: "전반적으로 안전하나 대도시 관광지에서는 소매치기에 유의하세요.",
+      },
+      regions: {
+        "파리": {
+          safetyIndex: 72.0,
+          badge: "유의 필요",
+          summary:
+            "주요 관광지와 대중교통 이용 시 소매치기, 여권·휴대폰 분실에 유의하세요.",
+        },
+        "몽마르트르": {
+          safetyIndex: 65.0,
+          badge: "유의 필요",
+          summary:
+            "사크레쾨르 대성당 주변 소매치기와 팔찌 강매 등 호객 사기에 특히 주의하세요.",
+        },
+        "니스": {
+          safetyIndex: 80.0,
+          badge: "양호",
+          summary:
+            "해안 관광지는 비교적 안전하나 여름 성수기에는 소매치기에 유의하세요.",
+        },
+      },
     },
     ES: {
-      region: "바르셀로나",
-      safetyIndex: 68.0,
-      badge: "유의 필요",
-      summary:
-        "관광 밀집 지역의 소매치기 발생 빈도가 높고, 야간 골목길 이동 시 주의가 필요합니다.",
+      default: {
+        region: "스페인",
+        safetyIndex: 70.0,
+        badge: "유의 필요",
+        summary: "대도시 관광지 중심으로 소매치기 사례가 잦은 편입니다.",
+      },
+      regions: {
+        "바르셀로나": {
+          safetyIndex: 68.0,
+          badge: "유의 필요",
+          summary:
+            "관광 밀집 지역의 소매치기 발생 빈도가 높고, 야간 골목길 이동 시 주의가 필요합니다.",
+        },
+        "마드리드": {
+          safetyIndex: 74.0,
+          badge: "양호",
+          summary:
+            "대체로 안전하나 솔 광장 등 관광 밀집 지역에서는 소매치기에 유의하세요.",
+        },
+      },
     },
     JP: {
-      region: "오사카",
-      safetyIndex: 81.0,
-      badge: "양호",
-      summary:
-        "치안은 양호한 편이나 의약품 반입 규정과 입국 서류를 사전에 확인하세요.",
+      default: {
+        region: "일본",
+        safetyIndex: 84.0,
+        badge: "양호",
+        summary: "치안이 우수한 편이나 의약품 반입 규정을 사전에 확인하세요.",
+      },
+      regions: {
+        "오사카": {
+          safetyIndex: 81.0,
+          badge: "양호",
+          summary:
+            "치안은 양호한 편이나 의약품 반입 규정과 입국 서류를 사전에 확인하세요.",
+        },
+        "간사이공항": {
+          safetyIndex: 88.0,
+          badge: "양호",
+          summary:
+            "공항 내 치안은 매우 양호하나 입국 심사 시 반입금지 의약품 여부를 확인하세요.",
+        },
+      },
     },
     KH: {
-      region: "프놈펜",
-      safetyIndex: 54.0,
-      badge: "주의",
-      summary:
-        "고수익 취업 제안, 여권 보관 요구 등 신변안전 위험에 특히 유의하세요.",
+      default: {
+        region: "캄보디아",
+        safetyIndex: 54.0,
+        badge: "주의",
+        summary:
+          "고수익 취업 제안, 여권 보관 요구 등 신변안전 위험에 특히 유의하세요.",
+      },
+      regions: {
+        "프놈펜": {
+          safetyIndex: 54.0,
+          badge: "주의",
+          summary:
+            "고수익 취업 제안, 여권 보관 요구 등 신변안전 위험에 특히 유의하세요.",
+        },
+      },
     },
   };
 
@@ -54,13 +115,19 @@
   }
 
   function renderDemo(root, country, regionOverride, layout) {
-    var data = DEMO_DATA[country];
-    var region = regionOverride || (data && data.region) || country;
-    var safetyIndex = data ? data.safetyIndex.toFixed(1) : "--";
-    var badge = data ? data.badge : "정보 없음";
-    var summary = data
-      ? data.summary
-      : "해당 국가 코드의 예시 데이터가 아직 준비되지 않았습니다.";
+    var countryData = DEMO_DATA[country];
+    var regionData =
+      countryData && regionOverride
+        ? countryData.regions[regionOverride]
+        : null;
+    var entry = regionData || (countryData && countryData.default);
+
+    var region = regionOverride || (countryData && countryData.default.region) || country;
+    var safetyIndex = entry ? entry.safetyIndex.toFixed(1) : "--";
+    var badge = entry ? entry.badge : "정보 없음";
+    var summary = entry
+      ? entry.summary
+      : "해당 국가/지역의 예시 데이터가 아직 준비되지 않았습니다.";
 
     render(
       root,
