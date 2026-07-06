@@ -301,6 +301,14 @@ export default function Home() {
               data-layout="card"
             />
           </div>
+          <div className="mt-6 mx-auto max-w-2xl">
+            <div
+              className="musai-safety-widget"
+              data-country="NZ"
+              data-region="오클랜드"
+              data-layout="bottomsheet"
+            />
+          </div>
         </div>
       </section>
 
