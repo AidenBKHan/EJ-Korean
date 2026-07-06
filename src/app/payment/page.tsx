@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import PaymentForm from "@/components/PaymentForm";
-import { packages } from "@/lib/packages";
+import { Suspense } from "react";
+import PaymentPageContent from "@/components/PaymentPageContent";
 
 export const metadata: Metadata = {
   title: "수업 결제 | EJ Korean",
@@ -19,7 +19,9 @@ export default function PaymentPage() {
         </p>
       </div>
 
-      <PaymentForm packages={packages} />
+      <Suspense>
+        <PaymentPageContent />
+      </Suspense>
     </div>
   );
 }

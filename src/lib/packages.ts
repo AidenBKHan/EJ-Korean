@@ -1,33 +1,89 @@
+import { useSyncExternalStore } from "react";
+
 export type ClassPackage = {
   id: string;
   name: string;
+  sessions: number;
   duration: string;
   price: number;
   description: string;
   badge?: string;
 };
 
-export const packages: ClassPackage[] = [
+export const DEFAULT_PACKAGES: ClassPackage[] = [
   {
     id: "trial",
     name: "1회 체험 수업",
+    sessions: 1,
     duration: "50분",
-    price: 35000,
-    description: "정식 수업 전 강사와 궁합을 확인해보는 체험 수업",
+    price: 30000,
+    description: "처음 만나는 체험 수업으로 부담 없이 시작해보세요.",
   },
   {
-    id: "package-4",
-    name: "4회 패키지",
-    duration: "회당 50분",
-    price: 130000,
-    description: "꾸준한 학습을 시작하는 학습자를 위한 기본 패키지",
-    badge: "인기",
+    id: "single",
+    name: "1회 수업",
+    sessions: 1,
+    duration: "50분",
+    price: 40000,
+    description: "필요할 때마다 편하게 듣는 단건 수업입니다.",
   },
   {
-    id: "package-8",
-    name: "8회 패키지",
+    id: "package-5",
+    name: "5회 패키지",
+    sessions: 5,
     duration: "회당 50분",
-    price: 240000,
-    description: "본격적으로 실력을 쌓고 싶은 학습자를 위한 패키지",
+    price: 190000,
+    description: "꾸준히 배우는 학습자를 위한 5회 패키지 (5% 할인 적용가)",
+    badge: "5% 할인",
+  },
+  {
+    id: "package-10",
+    name: "10회 패키지",
+    sessions: 10,
+    duration: "회당 50분",
+    price: 360000,
+    description: "본격적으로 실력을 쌓는 10회 패키지 (10% 할인 적용가)",
+    badge: "10% 할인",
   },
 ];
+
+const STORAGE_KEY = "ej-korean:packages";
+
+export function loadPackages(): ClassPackage[] {
+  if (typeof window === "undefined") return DEFAULT_PACKAGES;
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    if (!raw) return DEFAULT_PACKAGES;
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    return DEFAULT_PACKAGES;
+  } catch {
+    return DEFAULT_PACKAGES;
+  }
+}
+
+type Listener = () => void;
+const listeners = new Set<Listener>();
+
+export function savePackages(packages: ClassPackage[]) {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(packages));
+  listeners.forEach((listener) => listener());
+}
+
+export function subscribePackages(listener: Listener) {
+  listeners.add(listener);
+  window.addEventListener("storage", listener);
+  return () => {
+    listeners.delete(listener);
+    window.removeEventListener("storage", listener);
+  };
+}
+
+export function usePackages(): ClassPackage[] {
+  return useSyncExternalStore(
+    subscribePackages,
+    loadPackages,
+    () => DEFAULT_PACKAGES,
+  );
+}

@@ -5,10 +5,16 @@ import type { ClassPackage } from "@/lib/packages";
 
 export default function PaymentForm({
   packages,
+  preselectedId,
+  prefillName,
 }: {
   packages: ClassPackage[];
+  preselectedId?: string;
+  prefillName?: string;
 }) {
-  const [selectedId, setSelectedId] = useState(packages[0]?.id ?? "");
+  const [selectedId, setSelectedId] = useState(
+    preselectedId ?? packages[0]?.id ?? "",
+  );
   const [submitted, setSubmitted] = useState(false);
 
   const selectedPackage = packages.find((pkg) => pkg.id === selectedId);
@@ -71,6 +77,7 @@ export default function PaymentForm({
               name="name"
               type="text"
               required
+              defaultValue={prefillName}
               className="mt-1 block w-full rounded-lg border border-neutral-300 px-4 py-2 text-sm focus:border-rose-500 focus:outline-none focus:ring-1 focus:ring-rose-500"
               placeholder="홍길동"
             />
