@@ -3,7 +3,7 @@ import Script from "next/script";
 import InstagramIcon from "@/components/icons/InstagramIcon";
 import { INSTAGRAM_HANDLE, INSTAGRAM_URL } from "@/lib/social";
 
-const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+const MUSAI_WIDGET_SRC = "https://aidenbkhan.github.io/musai/musai-widget.js";
 
 const credentials = [
   "한국어교원자격증 보유",
@@ -312,7 +312,7 @@ export default function Home() {
         </div>
       </section>
 
-      <Script src={`${BASE_PATH}/musai-widget.js`} strategy="afterInteractive" />
+      <Script src={MUSAI_WIDGET_SRC} strategy="afterInteractive" />
     </div>
   );
 }

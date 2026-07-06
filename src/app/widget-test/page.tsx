@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+const MUSAI_WIDGET_SRC = "https://aidenbkhan.github.io/musai/musai-widget.js";
 
 export default function WidgetTestPage() {
   return (
@@ -19,15 +19,13 @@ export default function WidgetTestPage() {
           MUSAI 안전 위젯 연동 테스트
         </h1>
         <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-neutral-500">
-          MUSAI 설치 가이드에 나온 실제 연동 방식(
+          실제 배포된 MUSAI 위젯 스크립트(
           <code className="rounded bg-neutral-100 px-1 py-0.5 text-xs">
-            div.musai-safety-widget
-          </code>{" "}
-          + <code className="rounded bg-neutral-100 px-1 py-0.5 text-xs">script</code>{" "}
-          태그)을 그대로 적용한 페이지입니다.{" "}
-          <code className="rounded bg-neutral-100 px-1 py-0.5 text-xs">data-api-base</code>
-          가 비어 있어 가이드에 설명된 대로 데모 모드로 표시됩니다. EJ Korean
-          서비스와는 관련 없는 기술 연동 테스트용 페이지입니다.
+            {MUSAI_WIDGET_SRC}
+          </code>
+          )를 직접 불러옵니다. <code className="rounded bg-neutral-100 px-1 py-0.5 text-xs">data-api-base</code>
+          가 비어 있어 데모 모드로 표시됩니다. EJ Korean 서비스와는 관련 없는
+          기술 연동 테스트용 페이지입니다.
         </p>
       </div>
 
@@ -73,7 +71,7 @@ export default function WidgetTestPage() {
         />
       </div>
 
-      <Script src={`${BASE_PATH}/musai-widget.js`} strategy="afterInteractive" />
+      <Script src={MUSAI_WIDGET_SRC} strategy="afterInteractive" />
     </div>
   );
 }
