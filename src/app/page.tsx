@@ -265,12 +265,12 @@ export default function Home() {
           <p className="text-xs font-medium uppercase tracking-wide text-neutral-400">
             기술 테스트 삽입 (MUSAI 위젯)
           </p>
-          <div className="mt-4 flex flex-wrap justify-center gap-6">
+          <div className="mt-4">
             <div
               className="musai-safety-widget"
               data-country="FR"
               data-region="파리"
-              data-layout="card"
+              data-layout="wide"
             />
           </div>
           <div
