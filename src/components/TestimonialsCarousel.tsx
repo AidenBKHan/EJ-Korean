@@ -30,9 +30,7 @@ export default function TestimonialsCarousel({
       setCanScrollRight(el.scrollLeft < maxScroll - 4);
 
       const progress = maxScroll > 0 ? el.scrollLeft / maxScroll : 0;
-      setActiveIndex(
-        Math.round(progress * (testimonials.length - 1)),
-      );
+      setActiveIndex(Math.round(progress * (testimonials.length - 1)));
     }
 
     updateState();
@@ -41,6 +39,54 @@ export default function TestimonialsCarousel({
     return () => {
       el.removeEventListener("scroll", updateState);
       window.removeEventListener("resize", updateState);
+    };
+  }, [testimonials.length]);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    let isDragging = false;
+    let startX = 0;
+    let startScrollLeft = 0;
+
+    function onPointerDown(e: PointerEvent) {
+      if (e.pointerType !== "mouse" || !el) return;
+      isDragging = true;
+      startX = e.clientX;
+      startScrollLeft = el.scrollLeft;
+      el.style.scrollBehavior = "auto";
+      el.style.cursor = "grabbing";
+      el.setPointerCapture(e.pointerId);
+      e.preventDefault();
+    }
+
+    function onPointerMove(e: PointerEvent) {
+      if (!isDragging || !el) return;
+      el.scrollLeft = startScrollLeft - (e.clientX - startX);
+    }
+
+    function onPointerUp() {
+      if (!isDragging || !el) return;
+      isDragging = false;
+      el.style.cursor = "grab";
+      el.style.scrollBehavior = "smooth";
+
+      const maxScroll = el.scrollWidth - el.clientWidth;
+      const progress = maxScroll > 0 ? el.scrollLeft / maxScroll : 0;
+      const nearest = Math.round(progress * (testimonials.length - 1));
+      const target =
+        maxScroll > 0 ? (nearest / (testimonials.length - 1)) * maxScroll : 0;
+      el.scrollTo({ left: target, behavior: "smooth" });
+    }
+
+    el.addEventListener("pointerdown", onPointerDown);
+    window.addEventListener("pointermove", onPointerMove);
+    window.addEventListener("pointerup", onPointerUp);
+    return () => {
+      el.removeEventListener("pointerdown", onPointerDown);
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerup", onPointerUp);
     };
   }, [testimonials.length]);
 
@@ -55,12 +101,12 @@ export default function TestimonialsCarousel({
         )}
         <div
           ref={scrollRef}
-          className="no-scrollbar flex snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth px-[calc(50%-9rem)] pb-2 sm:px-[calc(50%-10rem)]"
+          className="no-scrollbar flex cursor-grab snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth px-[calc(50%-9rem)] pb-2 sm:px-[calc(50%-10rem)] md:px-6"
         >
           {testimonials.map((item) => (
             <figure
               key={`${item.name}-${item.date}`}
-              className="flex w-72 shrink-0 snap-center flex-col rounded-2xl bg-white p-6 shadow-sm sm:w-80"
+              className="flex w-72 shrink-0 snap-center flex-col rounded-2xl bg-white p-6 shadow-sm sm:w-80 md:w-72 md:snap-start"
             >
               <blockquote className="flex-1 text-sm leading-relaxed text-neutral-600">
                 &ldquo;{item.quote}&rdquo;
