@@ -31,6 +31,8 @@ export default function PaymentPage() {
         data-layout="banner"
         data-position="bottom"
       />
+      {/* 화면 하단에 고정되는 배너가 푸터를 가리지 않도록 여유 공간 확보 */}
+      <div className="h-28" aria-hidden="true" />
     </div>
   );
 }
