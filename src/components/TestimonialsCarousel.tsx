@@ -90,6 +90,34 @@ export default function TestimonialsCarousel({
     };
   }, [testimonials.length]);
 
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el || testimonials.length < 2) return;
+
+    let timer: ReturnType<typeof setInterval>;
+
+    function startTimer() {
+      clearInterval(timer);
+      timer = setInterval(() => {
+        if (!el) return;
+        const maxScroll = el.scrollWidth - el.clientWidth;
+        if (maxScroll <= 0) return;
+        const progress = el.scrollLeft / maxScroll;
+        const current = Math.round(progress * (testimonials.length - 1));
+        const next = (current + 1) % testimonials.length;
+        const target = (next / (testimonials.length - 1)) * maxScroll;
+        el.scrollTo({ left: target, behavior: "smooth" });
+      }, 10000);
+    }
+
+    startTimer();
+    el.addEventListener("scroll", startTimer, { passive: true });
+    return () => {
+      clearInterval(timer);
+      el.removeEventListener("scroll", startTimer);
+    };
+  }, [testimonials.length]);
+
   return (
     <div>
       <div className="relative">
