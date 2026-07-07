@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 
 export const metadata: Metadata = {
   title: "MUSAI 위젯 테스트 | EJ Korean",
@@ -70,8 +69,6 @@ export default function WidgetTestPage() {
           data-layout="card"
         />
       </div>
-
-      <Script src={MUSAI_WIDGET_SRC} strategy="afterInteractive" />
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import MusaiWidgetLoader from "@/components/MusaiWidgetLoader";
 
 const notoSansKr = Noto_Sans_KR({
   variable: "--font-noto-sans-kr",
@@ -26,10 +27,11 @@ export default function RootLayout({
       lang="ko"
       className={`${notoSansKr.variable} h-full overflow-x-hidden antialiased`}
     >
-      <body className="flex min-h-full flex-col overflow-x-hidden bg-white text-neutral-900">
+      <body className="flex min-h-full flex-col bg-white text-neutral-900">
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
+        <MusaiWidgetLoader />
       </body>
     </html>
   );

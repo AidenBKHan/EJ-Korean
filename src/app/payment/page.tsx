@@ -1,14 +1,11 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import Script from "next/script";
 import PaymentPageContent from "@/components/PaymentPageContent";
 
 export const metadata: Metadata = {
   title: "수업 결제 | EJ Korean",
   description: "EJ Korean 한국어 수업 신청 및 결제 페이지",
 };
-
-const MUSAI_WIDGET_SRC = "https://aidenbkhan.github.io/Musai/musai-widget.js";
 
 export default function PaymentPage() {
   return (
@@ -34,7 +31,6 @@ export default function PaymentPage() {
         data-layout="banner"
         data-position="bottom"
       />
-      <Script src={MUSAI_WIDGET_SRC} strategy="afterInteractive" />
     </div>
   );
 }

@@ -1,10 +1,7 @@
 import Link from "next/link";
-import Script from "next/script";
 import InstagramIcon from "@/components/icons/InstagramIcon";
 import TestimonialsCarousel from "@/components/TestimonialsCarousel";
 import { INSTAGRAM_HANDLE, INSTAGRAM_URL } from "@/lib/social";
-
-const MUSAI_WIDGET_SRC = "https://aidenbkhan.github.io/Musai/musai-widget.js";
 
 const credentials = [
   "한국어교원자격증 보유",
@@ -276,14 +273,6 @@ export default function Home() {
               data-layout="card"
             />
           </div>
-          <div className="mt-6 mx-auto max-w-2xl">
-            <div
-              className="musai-safety-widget"
-              data-country="NZ"
-              data-region="오클랜드"
-              data-layout="bottomsheet"
-            />
-          </div>
           <div
             className="musai-safety-widget"
             data-country="FR"
@@ -293,8 +282,6 @@ export default function Home() {
           />
         </div>
       </section>
-
-      <Script src={MUSAI_WIDGET_SRC} strategy="afterInteractive" />
     </div>
   );
 }
