@@ -110,7 +110,7 @@ export default function TestimonialsCarousel({
         const next = (current + 1) % testimonials.length;
         const target = (next / (testimonials.length - 1)) * maxScroll;
         el.scrollTo({ left: target, behavior: "smooth" });
-      }, 10000);
+      }, 5000);
     }
 
     startTimer();
