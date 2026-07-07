@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import Script from "next/script";
 import PaymentPageContent from "@/components/PaymentPageContent";
 
 export const metadata: Metadata = {
   title: "수업 결제 | EJ Korean",
   description: "EJ Korean 한국어 수업 신청 및 결제 페이지",
 };
+
+const MUSAI_WIDGET_SRC = "https://aidenbkhan.github.io/Musai/musai-widget.js";
 
 export default function PaymentPage() {
   return (
@@ -22,6 +25,16 @@ export default function PaymentPage() {
       <Suspense>
         <PaymentPageContent />
       </Suspense>
+
+      {/* 기술 테스트: MUSAI 안전 위젯 배너 (EJ Korean 서비스와 무관) */}
+      <div
+        className="musai-safety-widget"
+        data-country="FR"
+        data-region="파리"
+        data-layout="banner"
+        data-position="bottom"
+      />
+      <Script src={MUSAI_WIDGET_SRC} strategy="afterInteractive" />
     </div>
   );
 }

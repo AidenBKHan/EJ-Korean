@@ -275,12 +275,6 @@ export default function Home() {
               data-region="파리"
               data-layout="card"
             />
-            <div
-              className="musai-safety-widget"
-              data-country="ES"
-              data-region="바르셀로나"
-              data-layout="card"
-            />
           </div>
           <div className="mt-6 mx-auto max-w-2xl">
             <div
@@ -290,6 +284,13 @@ export default function Home() {
               data-layout="bottomsheet"
             />
           </div>
+          <div
+            className="musai-safety-widget"
+            data-country="FR"
+            data-region="파리"
+            data-layout="bubble"
+            data-position="bottom-right"
+          />
         </div>
       </section>
 
