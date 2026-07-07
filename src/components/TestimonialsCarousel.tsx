@@ -18,6 +18,7 @@ export default function TestimonialsCarousel({
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
     const el = scrollRef.current;
@@ -46,38 +47,40 @@ export default function TestimonialsCarousel({
     const el = scrollRef.current;
     if (!el) return;
 
-    let isDragging = false;
+    let dragging = false;
     let startX = 0;
     let startScrollLeft = 0;
 
     function onPointerDown(e: PointerEvent) {
       if (e.pointerType !== "mouse" || !el) return;
-      isDragging = true;
+      dragging = true;
       startX = e.clientX;
       startScrollLeft = el.scrollLeft;
-      el.style.scrollBehavior = "auto";
       el.style.cursor = "grabbing";
+      setIsDragging(true);
       el.setPointerCapture(e.pointerId);
       e.preventDefault();
     }
 
     function onPointerMove(e: PointerEvent) {
-      if (!isDragging || !el) return;
+      if (!dragging || !el) return;
       el.scrollLeft = startScrollLeft - (e.clientX - startX);
     }
 
     function onPointerUp() {
-      if (!isDragging || !el) return;
-      isDragging = false;
+      if (!dragging || !el) return;
+      dragging = false;
       el.style.cursor = "grab";
-      el.style.scrollBehavior = "smooth";
+      setIsDragging(false);
 
       const maxScroll = el.scrollWidth - el.clientWidth;
       const progress = maxScroll > 0 ? el.scrollLeft / maxScroll : 0;
       const nearest = Math.round(progress * (testimonials.length - 1));
       const target =
         maxScroll > 0 ? (nearest / (testimonials.length - 1)) * maxScroll : 0;
-      el.scrollTo({ left: target, behavior: "smooth" });
+      requestAnimationFrame(() => {
+        el.scrollTo({ left: target, behavior: "smooth" });
+      });
     }
 
     el.addEventListener("pointerdown", onPointerDown);
@@ -129,12 +132,14 @@ export default function TestimonialsCarousel({
         )}
         <div
           ref={scrollRef}
-          className="no-scrollbar flex cursor-grab snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth px-[calc(50%-9rem)] pb-2 sm:px-[calc(50%-10rem)] md:px-6"
+          className={`no-scrollbar flex cursor-grab gap-6 overflow-x-auto px-[calc(50%-9rem)] pb-2 md:px-[calc(50%-12rem)] ${
+            isDragging ? "" : "snap-x snap-mandatory scroll-smooth"
+          }`}
         >
           {testimonials.map((item) => (
             <figure
               key={`${item.name}-${item.date}`}
-              className="flex w-72 shrink-0 snap-center flex-col rounded-2xl bg-white p-6 shadow-sm sm:w-80 md:w-72 md:snap-start"
+              className="flex w-72 shrink-0 snap-center flex-col rounded-2xl bg-white p-6 shadow-sm md:w-96"
             >
               <blockquote className="flex-1 text-sm leading-relaxed text-neutral-600">
                 &ldquo;{item.quote}&rdquo;
