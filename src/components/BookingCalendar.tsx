@@ -4,6 +4,7 @@ import { useState } from "react";
 import {
   getAvailableSlots,
   getDateStatus,
+  slotsConflict,
   toDateKey,
   type Booking,
   type ScheduleSettings,
@@ -20,6 +21,29 @@ const WEEKDAY_LABELS = [
 ];
 
 export type BookedSlot = { date: string; time: string };
+
+/**
+ * Slots still pickable for a date, additionally excluding anything that
+ * would overlap the current user's own not-yet-submitted selections (so a
+ * 50-minute class picked at 10:00 immediately blocks 10:30, before the form
+ * is even submitted).
+ */
+function pickableSlots(
+  schedule: ScheduleSettings,
+  bookings: Booking[],
+  selectedSlots: BookedSlot[],
+  dateKey: string,
+): string[] {
+  const base = getAvailableSlots(schedule, bookings, dateKey);
+  const pendingTimes = selectedSlots
+    .filter((s) => s.date === dateKey)
+    .map((s) => s.time);
+  return base.filter(
+    (time) =>
+      pendingTimes.includes(time) ||
+      pendingTimes.every((t) => !slotsConflict(schedule, time, t)),
+  );
+}
 
 function startOfMonth(date: Date) {
   return new Date(date.getFullYear(), date.getMonth(), 1);
@@ -69,7 +93,7 @@ export default function BookingCalendar({
 
   const grid = buildMonthGrid(viewMonth);
   const activeSlots = activeDate
-    ? getAvailableSlots(schedule, bookings, activeDate)
+    ? pickableSlots(schedule, bookings, selectedSlots, activeDate)
     : [];
   const selectedKeys = new Set(
     selectedSlots.map((s) => `${s.date}_${s.time}`),
@@ -121,10 +145,17 @@ export default function BookingCalendar({
             date.getMonth() === viewMonth.getMonth() &&
             date.getFullYear() === viewMonth.getFullYear();
           const isPast = dateKey < todayKey;
-          const status =
-            inMonth && !isPast
-              ? getDateStatus(schedule, bookings, dateKey)
-              : "closed";
+          let status: "available" | "full" | "closed" = "closed";
+          if (inMonth && !isPast) {
+            status = getDateStatus(schedule, bookings, dateKey);
+            if (
+              status === "available" &&
+              pickableSlots(schedule, bookings, selectedSlots, dateKey)
+                .length === 0
+            ) {
+              status = "full";
+            }
+          }
           const isSelectable = inMonth && !isPast && status === "available";
           const isActive = dateKey === activeDate;
           const hasSelection = selectedSlots.some((s) => s.date === dateKey);

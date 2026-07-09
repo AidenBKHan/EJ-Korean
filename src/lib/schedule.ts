@@ -163,6 +163,20 @@ export function getSlotsForDate(
   return slots;
 }
 
+/** Whether two same-day start times would overlap once the class length and break are applied. */
+export function slotsConflict(
+  schedule: ScheduleSettings,
+  timeA: string,
+  timeB: string,
+): boolean {
+  const breakMinutes = schedule.breakMinutes ?? 10;
+  const aStart = timeToMinutes(timeA);
+  const aEnd = aStart + schedule.slotMinutes;
+  const bStart = timeToMinutes(timeB);
+  const bEnd = bStart + schedule.slotMinutes;
+  return !(aStart >= bEnd + breakMinutes || bStart >= aEnd + breakMinutes);
+}
+
 /**
  * Start times that are still bookable: don't overlap an existing class (plus
  * the required break on either side), and aren't in the past.
@@ -172,23 +186,16 @@ export function getAvailableSlots(
   bookings: Booking[],
   dateKey: string,
 ): string[] {
-  const breakMinutes = schedule.breakMinutes ?? 10;
   const dayBookings = bookings.filter((b) => b.date === dateKey);
   const now = new Date();
   const isToday = toDateKey(now) === dateKey;
   const nowMinutes = now.getHours() * 60 + now.getMinutes();
 
   return getSlotsForDate(schedule, dateKey).filter((time) => {
-    const start = timeToMinutes(time);
-    if (isToday && start <= nowMinutes) return false;
-    const end = start + schedule.slotMinutes;
-    return dayBookings.every((booking) => {
-      const bookedStart = timeToMinutes(booking.time);
-      const bookedEnd = bookedStart + schedule.slotMinutes;
-      return (
-        start >= bookedEnd + breakMinutes || bookedStart >= end + breakMinutes
-      );
-    });
+    if (isToday && timeToMinutes(time) <= nowMinutes) return false;
+    return dayBookings.every(
+      (booking) => !slotsConflict(schedule, time, booking.time),
+    );
   });
 }
 
