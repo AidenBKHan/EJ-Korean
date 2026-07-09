@@ -1,7 +1,7 @@
 "use client";
 
+import { useState } from "react";
 import {
-  DAY_LABELS,
   getAvailableSlots,
   getDateStatus,
   toDateKey,
@@ -9,97 +9,211 @@ import {
   type ScheduleSettings,
 } from "@/lib/schedule";
 
-const DAYS_TO_SHOW = 21;
+const WEEKDAY_LABELS = [
+  { ko: "일", en: "Sun" },
+  { ko: "월", en: "Mon" },
+  { ko: "화", en: "Tue" },
+  { ko: "수", en: "Wed" },
+  { ko: "목", en: "Thu" },
+  { ko: "금", en: "Fri" },
+  { ko: "토", en: "Sat" },
+];
 
-function formatDateLabel(dateKey: string) {
-  const date = new Date(`${dateKey}T00:00:00`);
-  return `${date.getMonth() + 1}/${date.getDate()} (${DAY_LABELS[date.getDay()]})`;
+export type BookedSlot = { date: string; time: string };
+
+function startOfMonth(date: Date) {
+  return new Date(date.getFullYear(), date.getMonth(), 1);
+}
+
+function buildMonthGrid(monthStart: Date): Date[] {
+  const firstWeekday = monthStart.getDay();
+  const gridStart = new Date(monthStart);
+  gridStart.setDate(monthStart.getDate() - firstWeekday);
+
+  const daysInMonth = new Date(
+    monthStart.getFullYear(),
+    monthStart.getMonth() + 1,
+    0,
+  ).getDate();
+  const totalCells = Math.ceil((firstWeekday + daysInMonth) / 7) * 7;
+
+  return Array.from({ length: totalCells }, (_, i) => {
+    const d = new Date(gridStart);
+    d.setDate(gridStart.getDate() + i);
+    return d;
+  });
 }
 
 export default function BookingCalendar({
   schedule,
   bookings,
-  selectedDate,
-  selectedTime,
-  onSelectDate,
-  onSelectTime,
+  selectedSlots,
+  maxSlots,
+  onToggleSlot,
 }: {
   schedule: ScheduleSettings;
   bookings: Booking[];
-  selectedDate: string | null;
-  selectedTime: string | null;
-  onSelectDate: (date: string) => void;
-  onSelectTime: (time: string) => void;
+  selectedSlots: BookedSlot[];
+  maxSlots: number;
+  onToggleSlot: (slot: BookedSlot) => void;
 }) {
   const today = new Date();
-  const dates = Array.from({ length: DAYS_TO_SHOW }, (_, i) => {
-    const date = new Date(today);
-    date.setDate(today.getDate() + i);
-    return toDateKey(date);
-  });
+  const todayKey = toDateKey(today);
+  const [viewMonth, setViewMonth] = useState(() => startOfMonth(today));
+  const [activeDate, setActiveDate] = useState<string | null>(null);
 
-  const slots = selectedDate
-    ? getAvailableSlots(schedule, bookings, selectedDate)
+  const canGoPrevMonth =
+    viewMonth.getFullYear() > today.getFullYear() ||
+    (viewMonth.getFullYear() === today.getFullYear() &&
+      viewMonth.getMonth() > today.getMonth());
+
+  const grid = buildMonthGrid(viewMonth);
+  const activeSlots = activeDate
+    ? getAvailableSlots(schedule, bookings, activeDate)
     : [];
+  const selectedKeys = new Set(
+    selectedSlots.map((s) => `${s.date}_${s.time}`),
+  );
 
   return (
     <div>
-      <p className="text-sm font-medium text-neutral-700">예약 날짜 선택</p>
-      <div className="no-scrollbar mt-2 flex gap-2 overflow-x-auto pb-1">
-        {dates.map((dateKey) => {
-          const status = getDateStatus(schedule, bookings, dateKey);
-          const isSelected = dateKey === selectedDate;
-          const disabled = status !== "available";
+      <div className="flex items-center justify-between">
+        <button
+          type="button"
+          disabled={!canGoPrevMonth}
+          onClick={() =>
+            setViewMonth(
+              (prev) => new Date(prev.getFullYear(), prev.getMonth() - 1, 1),
+            )
+          }
+          className="rounded-full border border-neutral-300 px-3 py-1 text-sm text-neutral-600 transition-colors hover:border-rose-300 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-neutral-300"
+        >
+          ‹
+        </button>
+        <p className="text-sm font-semibold text-neutral-900">
+          {viewMonth.getFullYear()}년 {viewMonth.getMonth() + 1}월
+        </p>
+        <button
+          type="button"
+          onClick={() =>
+            setViewMonth(
+              (prev) => new Date(prev.getFullYear(), prev.getMonth() + 1, 1),
+            )
+          }
+          className="rounded-full border border-neutral-300 px-3 py-1 text-sm text-neutral-600 transition-colors hover:border-rose-300"
+        >
+          ›
+        </button>
+      </div>
+
+      <div className="mt-3 grid grid-cols-7 gap-1 text-center text-xs font-medium text-neutral-400">
+        {WEEKDAY_LABELS.map((label) => (
+          <div key={label.ko}>
+            {label.ko}
+            <span className="hidden sm:inline"> ({label.en})</span>
+          </div>
+        ))}
+      </div>
+      <div className="mt-1 grid grid-cols-7 gap-1">
+        {grid.map((date) => {
+          const dateKey = toDateKey(date);
+          const inMonth =
+            date.getMonth() === viewMonth.getMonth() &&
+            date.getFullYear() === viewMonth.getFullYear();
+          const isPast = dateKey < todayKey;
+          const status =
+            inMonth && !isPast
+              ? getDateStatus(schedule, bookings, dateKey)
+              : "closed";
+          const isSelectable = inMonth && !isPast && status === "available";
+          const isActive = dateKey === activeDate;
+          const hasSelection = selectedSlots.some((s) => s.date === dateKey);
+
           return (
             <button
               key={dateKey}
               type="button"
-              disabled={disabled}
-              onClick={() => onSelectDate(dateKey)}
-              className={`shrink-0 rounded-lg border px-3 py-2 text-center text-xs font-medium transition-colors ${
-                isSelected
-                  ? "border-rose-600 bg-rose-600 text-white"
-                  : disabled
-                    ? "cursor-not-allowed border-neutral-100 bg-neutral-50 text-neutral-300"
-                    : "border-neutral-300 text-neutral-700 hover:border-rose-300"
+              disabled={!isSelectable}
+              onClick={() => setActiveDate(dateKey)}
+              className={`relative rounded-lg py-2 text-sm transition-colors ${
+                !inMonth
+                  ? "text-neutral-200"
+                  : isPast || status !== "available"
+                    ? "cursor-not-allowed text-neutral-300"
+                    : isActive
+                      ? "bg-rose-600 font-semibold text-white"
+                      : hasSelection
+                        ? "bg-rose-100 font-semibold text-rose-600"
+                        : "text-neutral-700 hover:bg-rose-50"
               }`}
             >
-              {formatDateLabel(dateKey)}
-              {status === "full" && (
-                <span className="mt-0.5 block text-[10px]">마감</span>
+              {date.getDate()}
+              {hasSelection && !isActive && (
+                <span className="absolute bottom-0.5 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-rose-600" />
               )}
             </button>
           );
         })}
       </div>
 
-      {selectedDate && (
+      {activeDate && (
         <div className="mt-4">
           <p className="text-sm font-medium text-neutral-700">
-            {formatDateLabel(selectedDate)} 예약 가능 시간
+            {activeDate} 예약 가능 시간{" "}
+            <span className="text-neutral-400">(Available Times)</span>
           </p>
           <div className="mt-2 flex flex-wrap gap-2">
-            {slots.length === 0 ? (
+            {activeSlots.length === 0 ? (
               <p className="text-sm text-neutral-400">
-                예약 가능한 시간이 없습니다.
+                예약 가능한 시간이 없습니다. No available times.
               </p>
             ) : (
-              slots.map((time) => (
-                <button
-                  key={time}
-                  type="button"
-                  onClick={() => onSelectTime(time)}
-                  className={`rounded-full border px-4 py-1.5 text-sm font-medium transition-colors ${
-                    time === selectedTime
-                      ? "border-rose-600 bg-rose-600 text-white"
-                      : "border-neutral-300 text-neutral-700 hover:border-rose-300"
-                  }`}
-                >
-                  {time}
-                </button>
-              ))
+              activeSlots.map((time) => {
+                const isSelected = selectedKeys.has(`${activeDate}_${time}`);
+                const disabled =
+                  !isSelected && selectedSlots.length >= maxSlots;
+                return (
+                  <button
+                    key={time}
+                    type="button"
+                    disabled={disabled}
+                    onClick={() => onToggleSlot({ date: activeDate, time })}
+                    className={`rounded-full border px-4 py-1.5 text-sm font-medium transition-colors ${
+                      isSelected
+                        ? "border-rose-600 bg-rose-600 text-white"
+                        : disabled
+                          ? "cursor-not-allowed border-neutral-100 text-neutral-300"
+                          : "border-neutral-300 text-neutral-700 hover:border-rose-300"
+                    }`}
+                  >
+                    {time}
+                  </button>
+                );
+              })
             )}
           </div>
+        </div>
+      )}
+
+      {selectedSlots.length > 0 && (
+        <div className="mt-4 space-y-1.5">
+          {selectedSlots.map((slot) => (
+            <div
+              key={`${slot.date}_${slot.time}`}
+              className="flex items-center justify-between rounded-lg bg-neutral-50 px-3 py-2 text-sm"
+            >
+              <span className="text-neutral-700">
+                {slot.date} {slot.time}
+              </span>
+              <button
+                type="button"
+                onClick={() => onToggleSlot(slot)}
+                className="text-xs font-medium text-neutral-400 hover:text-rose-600"
+              >
+                삭제 (Remove)
+              </button>
+            </div>
+          ))}
         </div>
       )}
     </div>

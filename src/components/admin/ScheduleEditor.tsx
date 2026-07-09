@@ -185,26 +185,73 @@ export default function ScheduleEditor() {
         })}
       </div>
 
-      <div className="mt-6">
-        <label className="block text-sm font-medium text-neutral-700">
-          수업(예약 슬롯) 간격
-        </label>
-        <select
-          value={schedule.slotMinutes}
-          onChange={(event) => {
-            setSavedAt(null);
-            setSchedule((prev) => ({
-              ...prev,
-              slotMinutes: Number(event.target.value),
-            }));
-          }}
-          className="mt-1 rounded-lg border border-neutral-300 px-3 py-2 text-base"
-        >
-          <option value={30}>30분</option>
-          <option value={50}>50분</option>
-          <option value={60}>60분</option>
-          <option value={90}>90분</option>
-        </select>
+      <div className="mt-6 grid gap-4 sm:grid-cols-3">
+        <div>
+          <label className="block text-sm font-medium text-neutral-700">
+            수업 시간
+          </label>
+          <select
+            value={schedule.slotMinutes}
+            onChange={(event) => {
+              setSavedAt(null);
+              setSchedule((prev) => ({
+                ...prev,
+                slotMinutes: Number(event.target.value),
+              }));
+            }}
+            className="mt-1 w-full rounded-lg border border-neutral-300 px-3 py-2 text-base"
+          >
+            <option value={30}>30분</option>
+            <option value={50}>50분</option>
+            <option value={60}>60분</option>
+            <option value={90}>90분</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-neutral-700">
+            수업 사이 쉬는 시간
+          </label>
+          <select
+            value={schedule.breakMinutes}
+            onChange={(event) => {
+              setSavedAt(null);
+              setSchedule((prev) => ({
+                ...prev,
+                breakMinutes: Number(event.target.value),
+              }));
+            }}
+            className="mt-1 w-full rounded-lg border border-neutral-300 px-3 py-2 text-base"
+          >
+            <option value={0}>없음</option>
+            <option value={5}>5분</option>
+            <option value={10}>10분</option>
+            <option value={15}>15분</option>
+            <option value={20}>20분</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-neutral-700">
+            예약 시간 선택 단위
+          </label>
+          <select
+            value={schedule.stepMinutes}
+            onChange={(event) => {
+              setSavedAt(null);
+              setSchedule((prev) => ({
+                ...prev,
+                stepMinutes: Number(event.target.value),
+              }));
+            }}
+            className="mt-1 w-full rounded-lg border border-neutral-300 px-3 py-2 text-base"
+          >
+            <option value={10}>10분</option>
+            <option value={15}>15분</option>
+            <option value={30}>30분</option>
+            <option value={60}>60분</option>
+          </select>
+        </div>
       </div>
 
       <div className="mt-6">

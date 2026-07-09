@@ -13,7 +13,12 @@ export type DayAvailability = {
 export type ScheduleSettings = {
   weekly: DayAvailability[];
   blockedDates: string[]; // "YYYY-MM-DD"
+  /** Length of one class, in minutes. */
   slotMinutes: number;
+  /** Required gap between the end of one class and the start of the next. */
+  breakMinutes: number;
+  /** Granularity of selectable start times (e.g. 30 = start times on the hour/half hour). */
+  stepMinutes: number;
 };
 
 export type Booking = {
@@ -40,6 +45,8 @@ export const DEFAULT_SCHEDULE: ScheduleSettings = {
   }),
   blockedDates: [],
   slotMinutes: 50,
+  breakMinutes: 10,
+  stepMinutes: 30,
 };
 
 const SCHEDULE_KEY = "ej-korean:schedule";
@@ -134,7 +141,7 @@ export function toDateKey(date: Date): string {
   return `${y}-${m}-${d}`;
 }
 
-/** All bookable time slots for a date's weekly ranges (ignores existing bookings). */
+/** All candidate class start times for a date's weekly ranges (ignores existing bookings). */
 export function getSlotsForDate(
   schedule: ScheduleSettings,
   dateKey: string,
@@ -144,37 +151,44 @@ export function getSlotsForDate(
   if (!day || !day.enabled || schedule.blockedDates.includes(dateKey)) {
     return [];
   }
+  const step = schedule.stepMinutes ?? 30;
   const slots: string[] = [];
   for (const range of day.ranges) {
     const start = timeToMinutes(range.start);
     const end = timeToMinutes(range.end);
-    for (
-      let t = start;
-      t + schedule.slotMinutes <= end;
-      t += schedule.slotMinutes
-    ) {
+    for (let t = start; t + schedule.slotMinutes <= end; t += step) {
       slots.push(minutesToTime(t));
     }
   }
   return slots;
 }
 
-/** Slots that are still bookable: not already booked, and not in the past. */
+/**
+ * Start times that are still bookable: don't overlap an existing class (plus
+ * the required break on either side), and aren't in the past.
+ */
 export function getAvailableSlots(
   schedule: ScheduleSettings,
   bookings: Booking[],
   dateKey: string,
 ): string[] {
-  const bookedTimes = new Set(
-    bookings.filter((b) => b.date === dateKey).map((b) => b.time),
-  );
+  const breakMinutes = schedule.breakMinutes ?? 10;
+  const dayBookings = bookings.filter((b) => b.date === dateKey);
   const now = new Date();
   const isToday = toDateKey(now) === dateKey;
   const nowMinutes = now.getHours() * 60 + now.getMinutes();
+
   return getSlotsForDate(schedule, dateKey).filter((time) => {
-    if (bookedTimes.has(time)) return false;
-    if (isToday && timeToMinutes(time) <= nowMinutes) return false;
-    return true;
+    const start = timeToMinutes(time);
+    if (isToday && start <= nowMinutes) return false;
+    const end = start + schedule.slotMinutes;
+    return dayBookings.every((booking) => {
+      const bookedStart = timeToMinutes(booking.time);
+      const bookedEnd = bookedStart + schedule.slotMinutes;
+      return (
+        start >= bookedEnd + breakMinutes || bookedStart >= end + breakMinutes
+      );
+    });
   });
 }
 

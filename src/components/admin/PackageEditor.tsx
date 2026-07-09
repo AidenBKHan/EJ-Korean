@@ -177,12 +177,27 @@ export default function PackageEditor() {
               </div>
               <div className="sm:col-span-2">
                 <label className="block text-xs font-medium text-neutral-500">
-                  설명
+                  설명 (한국어)
                 </label>
                 <textarea
                   value={pkg.description}
                   onChange={(event) =>
                     updatePackage(pkg.id, { description: event.target.value })
+                  }
+                  rows={2}
+                  className="mt-1 block w-full rounded-lg border border-neutral-300 px-3 py-2 text-base"
+                />
+              </div>
+              <div className="sm:col-span-2">
+                <label className="block text-xs font-medium text-neutral-500">
+                  설명 (영어) / Description (English)
+                </label>
+                <textarea
+                  value={pkg.descriptionEn ?? ""}
+                  onChange={(event) =>
+                    updatePackage(pkg.id, {
+                      descriptionEn: event.target.value || undefined,
+                    })
                   }
                   rows={2}
                   className="mt-1 block w-full rounded-lg border border-neutral-300 px-3 py-2 text-base"
