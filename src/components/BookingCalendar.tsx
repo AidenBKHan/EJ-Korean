@@ -4,6 +4,7 @@ import { useState } from "react";
 import {
   getAvailableSlots,
   getDateStatus,
+  getSlotsForDate,
   slotsConflict,
   toDateKey,
   type Booking,
@@ -107,9 +108,15 @@ export default function BookingCalendar({
       viewMonth.getMonth() > today.getMonth());
 
   const grid = buildMonthGrid(viewMonth);
-  const activeSlots = activeDate
-    ? pickableSlots(schedule, bookings, selectedSlots, activeDate)
+  const allSlotsForActiveDate = activeDate
+    ? getSlotsForDate(schedule, activeDate)
     : [];
+  const bookableSet = new Set(
+    activeDate ? getAvailableSlots(schedule, bookings, activeDate) : [],
+  );
+  const pendingForActiveDate = selectedSlots
+    .filter((s) => s.date === activeDate)
+    .map((s) => s.time);
   const selectedKeys = new Set(
     selectedSlots.map((s) => `${s.date}_${s.time}`),
   );
@@ -211,15 +218,22 @@ export default function BookingCalendar({
             <span className="text-neutral-400">(Available Times)</span>
           </p>
           <div className="mt-2 flex flex-wrap gap-2">
-            {activeSlots.length === 0 ? (
+            {allSlotsForActiveDate.length === 0 ? (
               <p className="text-sm text-neutral-400">
                 예약 가능한 시간이 없습니다. No available times.
               </p>
             ) : (
-              activeSlots.map((time) => {
+              allSlotsForActiveDate.map((time) => {
                 const isSelected = selectedKeys.has(`${activeDate}_${time}`);
+                const conflictsWithPending = pendingForActiveDate.some(
+                  (t) => t !== time && slotsConflict(schedule, time, t),
+                );
+                const atMaxSelected = selectedSlots.length >= maxSlots;
                 const disabled =
-                  !isSelected && selectedSlots.length >= maxSlots;
+                  !isSelected &&
+                  (!bookableSet.has(time) ||
+                    conflictsWithPending ||
+                    atMaxSelected);
                 return (
                   <button
                     key={time}
@@ -230,7 +244,7 @@ export default function BookingCalendar({
                       isSelected
                         ? "border-rose-600 bg-rose-600 text-white"
                         : disabled
-                          ? "cursor-not-allowed border-neutral-100 text-neutral-300"
+                          ? "cursor-not-allowed border-neutral-100 text-neutral-300 line-through"
                           : "border-neutral-300 text-neutral-700 hover:border-rose-300"
                     }`}
                   >
