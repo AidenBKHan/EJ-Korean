@@ -38,7 +38,7 @@ export default function AdminLoginForm() {
             id="admin-id"
             value={id}
             onChange={(event) => setId(event.target.value)}
-            className="mt-1 block w-full rounded-lg border border-neutral-300 px-4 py-2 text-sm focus:border-rose-500 focus:outline-none focus:ring-1 focus:ring-rose-500"
+            className="mt-1 block w-full rounded-lg border border-neutral-300 px-4 py-2 text-base focus:border-rose-500 focus:outline-none focus:ring-1 focus:ring-rose-500"
             autoComplete="username"
           />
         </div>
@@ -55,7 +55,7 @@ export default function AdminLoginForm() {
             type="password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
-            className="mt-1 block w-full rounded-lg border border-neutral-300 px-4 py-2 text-sm focus:border-rose-500 focus:outline-none focus:ring-1 focus:ring-rose-500"
+            className="mt-1 block w-full rounded-lg border border-neutral-300 px-4 py-2 text-base focus:border-rose-500 focus:outline-none focus:ring-1 focus:ring-rose-500"
             autoComplete="current-password"
           />
           <p className="mt-1 text-xs text-neutral-400">

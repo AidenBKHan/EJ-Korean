@@ -115,7 +115,7 @@ export default function PackageEditor() {
                   onChange={(event) =>
                     updatePackage(pkg.id, { name: event.target.value })
                   }
-                  className="mt-1 block w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm"
+                  className="mt-1 block w-full rounded-lg border border-neutral-300 px-3 py-2 text-base"
                 />
               </div>
               <div>
@@ -130,7 +130,7 @@ export default function PackageEditor() {
                     })
                   }
                   placeholder="예: 5% 할인"
-                  className="mt-1 block w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm"
+                  className="mt-1 block w-full rounded-lg border border-neutral-300 px-3 py-2 text-base"
                 />
               </div>
               <div>
@@ -146,7 +146,7 @@ export default function PackageEditor() {
                       sessions: Number(event.target.value),
                     })
                   }
-                  className="mt-1 block w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm"
+                  className="mt-1 block w-full rounded-lg border border-neutral-300 px-3 py-2 text-base"
                 />
               </div>
               <div>
@@ -158,7 +158,7 @@ export default function PackageEditor() {
                   onChange={(event) =>
                     updatePackage(pkg.id, { duration: event.target.value })
                   }
-                  className="mt-1 block w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm"
+                  className="mt-1 block w-full rounded-lg border border-neutral-300 px-3 py-2 text-base"
                 />
               </div>
               <div>
@@ -172,7 +172,7 @@ export default function PackageEditor() {
                   onChange={(event) =>
                     updatePackage(pkg.id, { price: Number(event.target.value) })
                   }
-                  className="mt-1 block w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm"
+                  className="mt-1 block w-full rounded-lg border border-neutral-300 px-3 py-2 text-base"
                 />
               </div>
               <div className="sm:col-span-2">
@@ -185,7 +185,7 @@ export default function PackageEditor() {
                     updatePackage(pkg.id, { description: event.target.value })
                   }
                   rows={2}
-                  className="mt-1 block w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm"
+                  className="mt-1 block w-full rounded-lg border border-neutral-300 px-3 py-2 text-base"
                 />
               </div>
             </div>

@@ -85,7 +85,7 @@ export default function PaymentForm({
               type="text"
               required
               defaultValue={prefillName}
-              className="mt-1 block w-full rounded-lg border border-neutral-300 px-4 py-2 text-sm focus:border-rose-500 focus:outline-none focus:ring-1 focus:ring-rose-500"
+              className="mt-1 block w-full rounded-lg border border-neutral-300 px-4 py-2 text-base focus:border-rose-500 focus:outline-none focus:ring-1 focus:ring-rose-500"
               placeholder="홍길동"
             />
           </div>
@@ -102,7 +102,7 @@ export default function PaymentForm({
               name="email"
               type="email"
               required
-              className="mt-1 block w-full rounded-lg border border-neutral-300 px-4 py-2 text-sm focus:border-rose-500 focus:outline-none focus:ring-1 focus:ring-rose-500"
+              className="mt-1 block w-full rounded-lg border border-neutral-300 px-4 py-2 text-base focus:border-rose-500 focus:outline-none focus:ring-1 focus:ring-rose-500"
               placeholder="example@email.com"
             />
           </div>
@@ -119,7 +119,7 @@ export default function PaymentForm({
               name="contact"
               type="text"
               required
-              className="mt-1 block w-full rounded-lg border border-neutral-300 px-4 py-2 text-sm focus:border-rose-500 focus:outline-none focus:ring-1 focus:ring-rose-500"
+              className="mt-1 block w-full rounded-lg border border-neutral-300 px-4 py-2 text-base focus:border-rose-500 focus:outline-none focus:ring-1 focus:ring-rose-500"
               placeholder="카카오톡 ID 또는 전화번호"
             />
           </div>
@@ -135,7 +135,7 @@ export default function PaymentForm({
               id="message"
               name="message"
               rows={3}
-              className="mt-1 block w-full rounded-lg border border-neutral-300 px-4 py-2 text-sm focus:border-rose-500 focus:outline-none focus:ring-1 focus:ring-rose-500"
+              className="mt-1 block w-full rounded-lg border border-neutral-300 px-4 py-2 text-base focus:border-rose-500 focus:outline-none focus:ring-1 focus:ring-rose-500"
               placeholder="희망 수업 시간, 학습 목표 등을 알려주세요"
             />
           </div>

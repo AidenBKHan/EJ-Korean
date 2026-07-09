@@ -75,7 +75,7 @@ export default function PaymentLinkGenerator({
           <select
             value={packageId}
             onChange={(event) => setPackageId(event.target.value)}
-            className="mt-1 block w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm"
+            className="mt-1 block w-full rounded-lg border border-neutral-300 px-3 py-2 text-base"
           >
             {packages.map((pkg) => (
               <option key={pkg.id} value={pkg.id}>
@@ -93,7 +93,7 @@ export default function PaymentLinkGenerator({
             value={recipientName}
             onChange={(event) => setRecipientName(event.target.value)}
             placeholder="예: 홍길동"
-            className="mt-1 block w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm"
+            className="mt-1 block w-full rounded-lg border border-neutral-300 px-3 py-2 text-base"
           />
         </div>
       </div>
