@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from "react";
+import { createCachedLoader } from "@/lib/localStorageCache";
 
 export type ClassPackage = {
   id: string;
@@ -55,18 +56,12 @@ export const DEFAULT_PACKAGES: ClassPackage[] = [
 
 const STORAGE_KEY = "ej-korean:packages";
 
-export function loadPackages(): ClassPackage[] {
-  if (typeof window === "undefined") return DEFAULT_PACKAGES;
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) return DEFAULT_PACKAGES;
-    const parsed = JSON.parse(raw);
-    if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    return DEFAULT_PACKAGES;
-  } catch {
-    return DEFAULT_PACKAGES;
-  }
-}
+export const loadPackages = createCachedLoader<ClassPackage[]>(
+  STORAGE_KEY,
+  DEFAULT_PACKAGES,
+  (value): value is ClassPackage[] =>
+    Array.isArray(value) && value.length > 0,
+);
 
 type Listener = () => void;
 const listeners = new Set<Listener>();

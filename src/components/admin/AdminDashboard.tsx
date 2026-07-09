@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { logout, useIsAdminLoggedIn } from "@/lib/admin-auth";
 import { usePackages } from "@/lib/packages";
 import PackageEditor from "@/components/admin/PackageEditor";
+import ScheduleEditor from "@/components/admin/ScheduleEditor";
 import PaymentLinkGenerator from "@/components/admin/PaymentLinkGenerator";
 
 export default function AdminDashboard() {
@@ -40,6 +41,10 @@ export default function AdminDashboard() {
 
       <section className="mt-10">
         <PackageEditor />
+      </section>
+
+      <section className="mt-16 border-t border-neutral-200 pt-10">
+        <ScheduleEditor />
       </section>
 
       <section className="mt-16 border-t border-neutral-200 pt-10">

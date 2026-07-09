@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import type { ClassPackage } from "@/lib/packages";
+import { addBooking, useBookings, useSchedule } from "@/lib/schedule";
+import BookingCalendar from "@/components/BookingCalendar";
 
 export default function PaymentForm({
   packages,
@@ -18,8 +20,33 @@ export default function PaymentForm({
     preselectedId ?? visiblePackages[0]?.id ?? packages[0]?.id ?? "",
   );
   const [submitted, setSubmitted] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [showDateTimeError, setShowDateTimeError] = useState(false);
+
+  const schedule = useSchedule();
+  const bookings = useBookings();
 
   const selectedPackage = packages.find((pkg) => pkg.id === selectedId);
+
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!selectedDate || !selectedTime) {
+      setShowDateTimeError(true);
+      return;
+    }
+    setShowDateTimeError(false);
+    if (selectedPackage) {
+      const formData = new FormData(event.currentTarget);
+      addBooking({
+        date: selectedDate,
+        time: selectedTime,
+        packageId: selectedPackage.id,
+        name: String(formData.get("name") ?? ""),
+      });
+    }
+    setSubmitted(true);
+  }
 
   return (
     <div className="mt-12">
@@ -62,14 +89,37 @@ export default function PaymentForm({
       </div>
 
       {/* Applicant form */}
-      <form
-        className="mx-auto mt-16 max-w-lg"
-        onSubmit={(event) => {
-          event.preventDefault();
-          setSubmitted(true);
-        }}
-      >
-        <h2 className="text-xl font-bold text-neutral-900">신청자 정보</h2>
+      <form className="mx-auto mt-16 max-w-lg" onSubmit={handleSubmit}>
+        <h2 className="text-xl font-bold text-neutral-900">예약 날짜 및 시간</h2>
+        <div className="mt-6">
+          <BookingCalendar
+            schedule={schedule}
+            bookings={bookings}
+            selectedDate={selectedDate}
+            selectedTime={selectedTime}
+            onSelectDate={(date) => {
+              setSelectedDate(date);
+              setSelectedTime(null);
+              setShowDateTimeError(false);
+            }}
+            onSelectTime={(time) => {
+              setSelectedTime(time);
+              setShowDateTimeError(false);
+            }}
+          />
+          {showDateTimeError && (
+            <p className="mt-2 text-sm text-rose-600">
+              예약 날짜와 시간을 선택해주세요.
+            </p>
+          )}
+          <p className="mt-3 text-xs text-neutral-400">
+            * 예약이 이 기기의 브라우저에만 임시로 저장되며 관리자에게 자동
+            전달되지는 않습니다. 예약 확정은 신청 후 안내드린 연락처로
+            다시 한번 확인해 드립니다.
+          </p>
+        </div>
+
+        <h2 className="mt-10 text-xl font-bold text-neutral-900">신청자 정보</h2>
 
         <div className="mt-6 space-y-4">
           <div>
@@ -142,11 +192,21 @@ export default function PaymentForm({
         </div>
 
         {selectedPackage && (
-          <div className="mt-6 flex items-center justify-between rounded-lg bg-neutral-50 px-4 py-3 text-sm">
-            <span className="text-neutral-600">선택한 패키지</span>
-            <span className="font-semibold text-neutral-900">
-              {selectedPackage.name} · {selectedPackage.price.toLocaleString("ko-KR")}원
-            </span>
+          <div className="mt-6 space-y-2 rounded-lg bg-neutral-50 px-4 py-3 text-sm">
+            <div className="flex items-center justify-between">
+              <span className="text-neutral-600">선택한 패키지</span>
+              <span className="font-semibold text-neutral-900">
+                {selectedPackage.name} · {selectedPackage.price.toLocaleString("ko-KR")}원
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-neutral-600">예약 일시</span>
+              <span className="font-semibold text-neutral-900">
+                {selectedDate && selectedTime
+                  ? `${selectedDate} ${selectedTime}`
+                  : "미선택"}
+              </span>
+            </div>
           </div>
         )}
 
@@ -164,7 +224,8 @@ export default function PaymentForm({
 
         {submitted && (
           <div className="mt-4 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-center text-sm text-rose-700">
-            신청이 접수되었습니다. 곧 연락드리겠습니다. (결제 시스템 준비 중)
+            {selectedDate} {selectedTime} 수업으로 신청이 접수되었습니다. 곧
+            연락드리겠습니다. (결제 시스템 준비 중)
           </div>
         )}
       </form>
