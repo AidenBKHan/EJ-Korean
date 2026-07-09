@@ -6,8 +6,8 @@ import InstagramIcon from "@/components/icons/InstagramIcon";
 import { INSTAGRAM_URL } from "@/lib/social";
 
 const navLinks = [
-  { href: "/", label: "강사 소개" },
-  { href: "/payment", label: "수업 결제" },
+  { href: "/", label: "강사 소개", labelEn: "Instructor Intro" },
+  { href: "/payment", label: "수업 결제", labelEn: "Class Payment" },
 ];
 
 export default function Header() {
@@ -27,13 +27,16 @@ export default function Header() {
                 key={link.href}
                 href={link.href}
                 aria-current={isActive ? "page" : undefined}
-                className={`transition-colors hover:text-rose-600 ${
+                className={`flex flex-col items-center leading-tight transition-colors hover:text-rose-600 ${
                   isActive
                     ? "font-semibold text-rose-600 underline underline-offset-4"
                     : ""
                 }`}
               >
-                {link.label}
+                <span>{link.label}</span>
+                <span className="text-[10px] font-normal text-neutral-400">
+                  {link.labelEn}
+                </span>
               </Link>
             );
           })}

@@ -20,6 +20,21 @@ const WEEKDAY_LABELS = [
   { ko: "토", en: "Sat" },
 ];
 
+const MONTH_LABELS_EN = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
 export type BookedSlot = { date: string; time: string };
 
 /**
@@ -114,8 +129,11 @@ export default function BookingCalendar({
         >
           ‹
         </button>
-        <p className="text-sm font-semibold text-neutral-900">
+        <p className="text-center text-sm font-semibold text-neutral-900">
           {viewMonth.getFullYear()}년 {viewMonth.getMonth() + 1}월
+          <span className="block text-xs font-medium text-neutral-400">
+            {MONTH_LABELS_EN[viewMonth.getMonth()]} {viewMonth.getFullYear()}
+          </span>
         </p>
         <button
           type="button"
@@ -133,8 +151,7 @@ export default function BookingCalendar({
       <div className="mt-3 grid grid-cols-7 gap-1 text-center text-xs font-medium text-neutral-400">
         {WEEKDAY_LABELS.map((label) => (
           <div key={label.ko}>
-            {label.ko}
-            <span className="hidden sm:inline"> ({label.en})</span>
+            {label.ko} ({label.en})
           </div>
         ))}
       </div>
